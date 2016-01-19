@@ -1,188 +1,154 @@
-# CakePhp3-AclManager
+Do like above:
 
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
-[![CakePHP 3](https://img.shields.io/badge/Version-CakePhp%203-brightgreen.svg?style=flat-square)](http://cakephp.org)
-[![Build Status](https://travis-ci.org/JcPires/CakePhp3-AclManager.svg?branch=master)](https://travis-ci.org/JcPires/CakePhp3-AclManager)
+##############
+#composer.json
+"require": {
++   "cakephp/acl": "dev-master",
++   "jcpires/cakephp3-aclmanager": "dev-master"
+},
+$> composer update
 
+#####################
+#config/bootstrap.php
+Plugin::load('Acl', ['bootstrap' => true]);
 
-## Install
-
-```
-    Composer require jcpires/cakephp3-aclmanager
-```
-or on composer.json
-
-```
-    "jcpires/cakephp3-aclmanager": "dev-master"
-```
-
-### Requirements
-
-[CakePhp ACL](https://github.com/cakephp/acl)
-
-
-## How to
-
-### Build your Acos
-
-First you need to build your acos, to do, you need to add this lines where you want. There are two way:
-
-*   By an event:
-
-    ```
-        use JcPires\AclManager\Event\PermissionsEditor;
-    ```
-    
-    ```
-        $this->eventManager()->on(new PermissionsEditor());
-        $acosBuilder = new Event('Permissions.buildAcos', $this);
-        $this->eventManager()->dispatch($acosBuilder);
-    ```
-
-*   By the component
-
-    ```
-        $this->loadComponent('JcPires/AclManager.AclManager');
-        $this->AclManager->acosBuilder();
-    ```
-
-NB: !!! Don't forget to delete those lines after building !!!
-
-
-### Add permissions when creating a new group
-
-!!! Be caution, to works, you need first a first level ARO with base node full granted like a Super Admin like this on the aros_acos table: create:1 read: 1 update: 1 delete: 1!!!
-
-On your Admin/GroupsController.php
-
-```
-    use JcPires\AclManager\Event\PermissionsEditor;
-```
-
-Add basics permissions, on your action add
-
-```
-    if ($this->Groups->save($group)) {
-
-        if (isset($this->request->data['parent_id'])) {
-            $parent = $this->request->data['parent_id'];
-        } else {
-            $parent = null;
-        }
-
-        $this->eventManager()->on(new PermissionsEditor());
-        $perms = new Event('Permissions.addAro', $this, [
-            'Aro' => $group,
-            'Parent' => $parent,
-            'Model' => 'Groups'
-        ]);
-        $this->eventManager()->dispatch($perms);
+##################
+#AppController.php
+public function initialize()
+{
+    parent::initialize();
+    //set locale format date
+    Type::build('datetime')->useLocaleParser()->setLocaleFormat('dd-mm-yyyy');
+    Time::setToStringFormat('dd/MM/YYYY');
+    //acl
+    $this->loadComponent('Acl.Acl');
+    $this->loadComponent('RequestHandler');
+    $this->loadComponent('Flash');
+    $this->loadComponent('Auth', [
+        'authorize' => 'Controller',
+        'unauthorizedRedirect' => false,
+        'loginAction' => [
+            'controller' => 'users', 'action' => 'login'
+        ],
+        'logoutRedirect' => [
+            'controller' => 'users', 'action' => 'login'
+        ],
+        'loginRedirect' => [
+            'controller' => 'pages', 'action' => 'index'
+        ],
+        'authError' => 'Did you really think you are allowed to see that?',
+        'authenticate' => [
+            'Form' => [
+                'userModel' => 'users',
+                'fields' => ['username' => 'email', 'password' => 'pass']
+            ]
+        ],
+        'storage' => 'Session'
+    ]);
+}
+public function isAuthorized($user)
+{
+    $acl = new AclComponent(new ComponentRegistry);
+    $return = $acl->check(['Usuarios' => ['id' => $user['id']]], $this->request->controller . '/' . $this->request->action);
+    if ($return) {
+        //$this->viewBuilder()->layout('admin'); // if you have admin template differ of default
+        return true;
+    } else {
+        return false;
     }
-```
+}
 
-### Edit permissions
+#####################
+#GroupsController.php
+public function edit($id = null)
+{
+    $group = $this->Groups->get($id, [
+        'contain' => []
+    ]);
 
-1.    On your action edit()
+    $this->loadComponent('JcPires/AclManager.AclManager');
+    $EditablePerms = $this->AclManager->getFormActions();
 
-    we need to get all acos "not really necessary is just an automatic array builder":
+    if ($this->request->is(['patch', 'post', 'put'])) {
+        $group = $this->Groups->patchEntity($group, $this->request->data);
+        if ($this->Groups->save($group)) {
 
-    ```
-        $this->loadComponent('JcPires/AclManager.AclManager');
-        $EditablePerms = $this->AclManager->getFormActions();
-    ```
-
-    If you to exclude some actions for the form like ajax actions, you have to add a static property
-    
-    On the specified controller like PostController or BlogController, ...:
-    
-    ```
-        public static $AclActionsExclude = [
-            'action1',
-            'action2',
-            '...'
-        ];
-    ```
-    
-    You will have an array with all acos's alias indexed by the controller aco path like:
-    
-    ```
-        'Blog' => [
-            'add',
-            'edit',
-            'delete
-        ],
-        'Post' => [
-            'add',
-            'edit',
-            'delete'
-        ],
-        'Admin/Post' => [
-            'add',
-            'edit',
-            'delete'
-        ]
-    ```
-
-2.    Build your form
-
-    First if you want to use the AclManager Helper 
-    
-    ```
-        public $helpers = [            
-                'AclManager' => [
-                            'className' => 'JcPires/AclManager.AclManager'
-                        ]
-            ];
-    ```
-    
-    an exemple with an Acl helper for checking if permissions are allowed or denied:
-    
-    ```
-        <?php foreach ($EditablePerms as $Acos) :?>
-            <?php foreach ($Acos as $controllerPath => $actions) :?>
-                <?php if (!empty($actions)) :?>
-                    <h4><?= $controllerPath ;?></h4>
-                    <?php foreach ($actions as $action) :?>
-                        <?php ($this->AclManager->checkGroup($group, 'App/'.$controllerPath.'/'.$action)) ? $val = 1 : $val = 0 ?>
-                        <?= $this->Form->label('App/'.$controllerPath.'/'.$action, $action);?>
-                        <?= $this->Form->select('App/'.$controllerPath.'/'.$action, [0 => 'No', 1 => 'Yes'], ['value' => $val]) ;?>
-                    <?php endforeach ;?>
-                <?php endif;?>
-            <?php endforeach ;?>
-        <?php endforeach ;?>
-    ```
-    
-    render:
-    
-    ```
-        <select name="App/Blog/add">
-            <option value="0">No</option>
-            <option value="1" selected>Yes</option>
-        </select>
-    ```
-
-If you don't use the Array Builder you need to specified your input name like aco path: App/Blog/add or App/Admin/Blog/add ... :base/:folder/:subfolder/:controller/:action "Folder and subfolder can be empty"
-
-3.   Update new permissions
-
-    ```
-    
-        if ($this->request->is('post')) {
-    
             $this->eventManager()->on(new PermissionsEditor());
             $perms = new Event('Permissions.editPerms', $this, [
                 'Aro' => $group,
                 'datas' => $this->request->data
             ]);
             $this->eventManager()->dispatch($perms);
+
+            $this->Flash->success(__('The group has been saved.'));
+            return $this->redirect(['action' => 'index']);
+        } else {
+            $this->Flash->error(__('The group could not be saved. Please, try again.'));
         }
-        
-    ```
-    
-    data need to be like this 'aco path' => value "0 deny / 1 allow"
-    
-    ```
-        'App/Blog/add' => 0
-        'App/Blog/edit' => 1
-        ...
-    ```
+    }
+    $this->set(compact('group', 'EditablePerms'));
+    $this->set('_serialize', ['group', 'EditablePerms']);
+}
+
+#################
+#Entity/Group.php
+public function parentNode()
+{
+    return null;
+}
+
+################
+#Entity/User.php
+protected function _setPassword($password)
+{
+    return (new DefaultPasswordHasher)->hash($password);
+}
+public function parentNode()
+{
+    if (!$this->id) {
+        return null;
+    }
+    if (isset($this->group_id)) {
+        $group_id = $this->group_id;
+    } else {
+        $users_table = TableRegistry::get('Users');
+        $user = $users_table->find('all', ['fields' => ['group_id']])->where(['id' => $this->id])->first();
+        $group_id = $user->group_id;
+    }
+    if (!$group_id) {
+        return null;
+    }
+
+    return ['Groups' => ['id' => $group_id]];
+}
+
+#####################
+#Table/UsersTable.php
+#Table/GroupsTable.php
+public function initialize()
+{
++    $this->addBehavior('Acl.Acl', ['type' => 'requester']);
+}
+
+################
+#Groups/edit.ctp
+<?php foreach ($EditablePerms as $Acos) : ?>
+    <?php foreach ($Acos as $controllerPath => $actions) : ?>
+        <?php if (!empty($actions)) : ?>
+            <h4><?= __($controllerPath); ?></h4>
+            <?php foreach ($actions as $action) : ?>
+                <?php $check = ($this->AclManager->checkGroup($usuarioGrupo, 'App/' . $controllerPath . '/' . $action)) ? 'checked' : null; ?>
+                <?= $this->Form->checkbox('App/' . $controllerPath . '/' . $action, [$check]); ?>
+                <?= $this->Form->label('App/' . $controllerPath . '/' . $action, $action); ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+<?php endforeach; ?>
+
+###############
+#ACL migrate DB
+$> bin/cake Migrations.migrations migrate -p Acl
+
+###########
+#ACO update
+$> bin/cake acl_extras aco_update
