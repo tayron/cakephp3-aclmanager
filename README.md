@@ -4,7 +4,7 @@ Do like above:
 #composer.json
 "require": {
 +   "cakephp/acl": "dev-master",
-+   "jcpires/cakephp3-aclmanager": "dev-master"
++   "pedrovalmor/cakephp3-acl-plugin": "dev-master"
 },
 $> composer update
 
