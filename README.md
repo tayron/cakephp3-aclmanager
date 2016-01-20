@@ -4,7 +4,7 @@
 ```
 "require": {
 +   "cakephp/acl": "dev-master",
-+   "pedrovalmor/cakephp3-aclmanager": "master"
++   "pedrovalmor/cakephp3-aclmanager": "*"
 },
 ```
 ```
