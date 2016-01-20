@@ -1,19 +1,23 @@
-Do like above:
+#Install instructions
 
-##############
-#composer.json
+##composer.json
+```
 "require": {
 +   "cakephp/acl": "dev-master",
-+   "pedrovalmor/cakephp3-acl-plugin": "dev-master"
++   "pedrovalmor/cakephp3-acl-plugin": "master"
 },
+```
+```
 $> composer update
+```
 
-#####################
-#config/bootstrap.php
+##config/bootstrap.php
+```
 Plugin::load('Acl', ['bootstrap' => true]);
+```
 
-##################
 #AppController.php
+```
 public function initialize()
 {
     parent::initialize();
@@ -46,6 +50,8 @@ public function initialize()
         'storage' => 'Session'
     ]);
 }
+```
+```
 public function isAuthorized($user)
 {
     $acl = new AclComponent(new ComponentRegistry);
@@ -57,9 +63,10 @@ public function isAuthorized($user)
         return false;
     }
 }
+```
 
-#####################
-#GroupsController.php
+##GroupsController.php
+```
 public function edit($id = null)
 {
     $group = $this->Groups->get($id, [
@@ -89,16 +96,18 @@ public function edit($id = null)
     $this->set(compact('group', 'EditablePerms'));
     $this->set('_serialize', ['group', 'EditablePerms']);
 }
+```
 
-#################
-#Entity/Group.php
+##Entity/Group.php
+```
 public function parentNode()
 {
     return null;
 }
+```
 
-################
-#Entity/User.php
+##Entity/User.php
+```
 protected function _setPassword($password)
 {
     return (new DefaultPasswordHasher)->hash($password);
@@ -121,17 +130,19 @@ public function parentNode()
 
     return ['Groups' => ['id' => $group_id]];
 }
+```
 
-#####################
-#Table/UsersTable.php
-#Table/GroupsTable.php
+##Table/UsersTable.php
+##Table/GroupsTable.php
+```
 public function initialize()
 {
 +    $this->addBehavior('Acl.Acl', ['type' => 'requester']);
 }
+```
 
-################
-#Groups/edit.ctp
+##Groups/edit.ctp
+```
 <?php foreach ($EditablePerms as $Acos) : ?>
     <?php foreach ($Acos as $controllerPath => $actions) : ?>
         <?php if (!empty($actions)) : ?>
@@ -144,11 +155,14 @@ public function initialize()
         <?php endif; ?>
     <?php endforeach; ?>
 <?php endforeach; ?>
+```
 
-###############
-#ACL migrate DB
+##ACL migrate DB
+```
 $> bin/cake Migrations.migrations migrate -p Acl
+```
 
-###########
-#ACO update
+##ACO update
+```
 $> bin/cake acl_extras aco_update
+```
