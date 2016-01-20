@@ -16,7 +16,7 @@ $> composer update
 Plugin::load('Acl', ['bootstrap' => true]);
 ```
 
-#AppController.php
+##AppController.php
 ```
 public function initialize()
 {
@@ -73,7 +73,7 @@ public function edit($id = null)
         'contain' => []
     ]);
 
-    $this->loadComponent('JcPires/AclManager.AclManager');
+    $this->loadComponent('pedrovalmor/AclManager.AclManager');
     $EditablePerms = $this->AclManager->getFormActions();
 
     if ($this->request->is(['patch', 'post', 'put'])) {
