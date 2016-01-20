@@ -19,6 +19,11 @@
     "require-dev": {
         "cakephp/cakephp-codesniffer": "dev-master"
     },
+    "autoload": {
+        "psr-4": {
+            "pedrovalmor\\AclManager\\": "src"
+        }
+    },
     "minimum-stability" : "dev",
     "prefer-stable": true
 }
