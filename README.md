@@ -55,7 +55,7 @@ public function initialize()
 public function isAuthorized($user)
 {
     $acl = new AclComponent(new ComponentRegistry);
-    $return = $acl->check(['Usuarios' => ['id' => $user['id']]], $this->request->controller . '/' . $this->request->action);
+    $return = $acl->check(['Users' => ['id' => $user['id']]], $this->request->controller . '/' . $this->request->action);
     if ($return) {
         //$this->viewBuilder()->layout('admin'); // if you have admin template differ of default
         return true;
@@ -148,7 +148,7 @@ public function initialize()
         <?php if (!empty($actions)) : ?>
             <h4><?= __($controllerPath); ?></h4>
             <?php foreach ($actions as $action) : ?>
-                <?php $check = ($this->AclManager->checkGroup($usuarioGrupo, 'App/' . $controllerPath . '/' . $action)) ? 'checked' : null; ?>
+                <?php $check = ($this->AclManager->checkGroup($group, 'App/' . $controllerPath . '/' . $action)) ? 'checked' : null; ?>
                 <?= $this->Form->checkbox('App/' . $controllerPath . '/' . $action, [$check]); ?>
                 <?= $this->Form->label('App/' . $controllerPath . '/' . $action, $action); ?>
             <?php endforeach; ?>
