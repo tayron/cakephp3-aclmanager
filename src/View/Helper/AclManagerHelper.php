@@ -2,7 +2,6 @@
 namespace pedrovalmor\AclPlugin\View\Helper;
 
 use Acl\Controller\Component\AclComponent;
-use App\Model\Entity\Group;
 use Cake\Controller\ComponentRegistry;
 use Cake\View\Helper;
 use Cake\View\View;
@@ -46,7 +45,7 @@ class AclManagerHelper extends Helper
      *
      * @return bool
      */
-    public function checkGroup(Group $aro, $aco = null)
+    public function checkGroup($aro, $aco = null)
     {
         if (empty($aro) || empty($aco)) {
             return false;
