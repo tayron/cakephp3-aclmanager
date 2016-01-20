@@ -4,7 +4,6 @@ namespace pedrovalmor\AclManager\Controller\Component;
 
 use Acl\Controller\Component\AclComponent;
 use Acl\Model\Entity\Aro;
-use App\Model\Entity\Group;
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
 use Cake\Core\App;
@@ -218,7 +217,7 @@ class AclManagerComponent extends Component
      *
      * @return bool return  true/false
      */
-    public function addBasicsRules(Group $aro, Aro $parent = null)
+    public function addBasicsRules($aro, Aro $parent = null)
     {
         $controllers = $this->getResources();
         $controllers = $this->__setAlias($controllers, $this->_base);
@@ -271,7 +270,7 @@ class AclManagerComponent extends Component
      *
      * @return bool return true/false
      */
-    public function editRule(Group $group, $alias, $data)
+    public function editRule($group, $alias, $data)
     {
         if (empty($alias) || empty($group)) {
             return false;
