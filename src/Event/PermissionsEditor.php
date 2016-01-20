@@ -5,7 +5,7 @@ use Acl\Controller\Component\AclComponent;
 use Cake\Controller\ComponentRegistry;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use pedrovalmor\AclManager\Controller\Component\AclManagerComponent;
+use pedrovalmor\AclPlugin\Controller\Component\AclManagerComponent;
 
 /**
  * Class PermissionsEditor

@@ -9,7 +9,7 @@
  * @link     https://github.com/JcPires/CakePhp3-AclManager
  */
 
-namespace pedrovalmor\AclManager\Controller\Component;
+namespace pedrovalmor\AclPlugin\Controller\Component;
 
 use Acl\Controller\Component\AclComponent;
 use Acl\Model\Entity\Aro;

@@ -1,5 +1,5 @@
 <?php
-namespace pedrovalmor\AclManager\View\Helper;
+namespace pedrovalmor\AclPlugin\View\Helper;
 
 use Acl\Controller\Component\AclComponent;
 use App\Model\Entity\Group;
