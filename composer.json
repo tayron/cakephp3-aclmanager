@@ -1,6 +1,7 @@
 {
     "name": "pedrovalmor/cakephp3-acl-plugin",
     "type": "cakephp-plugin",
+    "version": "v1.0-stable",
     "keywords": ["cakephp3", "plugin", "acl"],
     "homepage": "https://github.com/pedrovalmor/cakephp3-acl-plugin.git",
     "description": "ACL plugin for CakePhp3",
