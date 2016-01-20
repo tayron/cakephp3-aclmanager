@@ -1,9 +1,9 @@
 {
-    "name": "pedrovalmor/cakephp3-acl-plugin",
+    "name": "pedrovalmor/cakephp3-aclmanager",
     "type": "cakephp-plugin",
     "keywords": ["cakephp3", "plugin", "acl"],
-    "homepage": "https://github.com/pedrovalmor/cakephp3-acl-plugin",
-    "description": "ACL plugin for CakePhp3",
+    "homepage": "https://github.com/pedrovalmor/cakephp3-aclmanager",
+    "description": "CakePHP3 ACL Manager",
     "authors": [
         {
             "name": "Pedro Valmor",

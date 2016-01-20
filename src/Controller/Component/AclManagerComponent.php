@@ -1,15 +1,6 @@
 <?php
-/**
- * PHP version 5
- *
- * @category CakePhp3
- * @package  pedrovalmor\cakephp3-acl-plugin\Controller\Component
- * @author   Jc Pires <djyss@live.fr>
- * @license  MIT http://opensource.org/licenses/MIT
- * @link     https://github.com/JcPires/CakePhp3-AclManager
- */
 
-namespace pedrovalmor\AclPlugin\Controller\Component;
+namespace pedrovalmor\AclManager\Controller\Component;
 
 use Acl\Controller\Component\AclComponent;
 use Acl\Model\Entity\Aro;

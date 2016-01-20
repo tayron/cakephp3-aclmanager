@@ -5,17 +5,8 @@ use Acl\Controller\Component\AclComponent;
 use Cake\Controller\ComponentRegistry;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use pedrovalmor\AclPlugin\Controller\Component\AclManagerComponent;
+use pedrovalmor\AclManager\Controller\Component\AclManagerComponent;
 
-/**
- * Class PermissionsEditor
- *
- * @category CakePhp3
- * @package  pedrovalmor\AclManager\Event
- * @author   Jc Pires <djyss@live.fr>
- * @license  MIT http://opensource.org/licenses/MIT
- * @link     https://github.com/JcPires/CakePhp3-AclManager
- */
 class PermissionsEditor implements EventListenerInterface
 {
 
