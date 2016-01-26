@@ -11,6 +11,12 @@
 $> composer update
 ```
 
+##/vendor/cakephp/acl/src/AclExtras.php
+```
++   public $rootNode = 'App';
+-   public $rootNode = 'controllers';
+```
+
 ##config/bootstrap.php
 ```
 Plugin::load('Acl', ['bootstrap' => true]);
