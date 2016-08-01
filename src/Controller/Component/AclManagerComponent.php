@@ -297,6 +297,7 @@ class AclManagerComponent extends Component
     public function getFormActions()
     {
         $controllers = $this->__getControllers();
+        asort($controllers);
         $resources = [];
         foreach ($controllers as $controller) {
             $actions = $this->__getActions($controller);
