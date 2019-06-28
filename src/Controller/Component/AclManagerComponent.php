@@ -1,6 +1,6 @@
 <?php
 
-namespace pedrovalmor\AclManager\Controller\Component;
+namespace tayron\AclManager\Controller\Component;
 
 use Acl\Controller\Component\AclComponent;
 use Acl\Model\Entity\Aro;
