@@ -5,7 +5,7 @@ use Acl\Controller\Component\AclComponent;
 use Cake\Controller\ComponentRegistry;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use pedrovalmor\AclManager\Controller\Component\AclManagerComponent;
+use tayron\AclManager\Controller\Component\AclManagerComponent;
 
 class PermissionsEditor implements EventListenerInterface
 {
