@@ -1,5 +1,5 @@
 <?php
-namespace pedrovalmor\AclManager\View\Helper;
+namespace tayron\AclManager\View\Helper;
 
 use Acl\Controller\Component\AclComponent;
 use Cake\Controller\ComponentRegistry;
